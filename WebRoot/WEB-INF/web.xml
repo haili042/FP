@@ -1,0 +1,54 @@
+<!DOCTYPE web-app PUBLIC
+  '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN'
+  'http://java.sun.com/dtd/web-app_2_3.dtd'>
+
+
+<web-app>
+
+	<!-- 拦截器 -->
+	<filter>
+		<filter-name>setCharacterEncoding</filter-name>
+		<filter-class>com.fp.filter.EncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>setCharacterEncoding</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<!-- 请求映射 -->
+	<servlet>
+		<servlet-name>apriori</servlet-name>
+		<servlet-class>com.fp.mining.apriori.Apriori</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>fpgrow</servlet-name>
+		<servlet-class>com.fp.mining.fpgrow.FPGrow</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>eclat</servlet-name>
+		<servlet-class>com.fp.mining.eclat.Eclat</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>apriori</servlet-name>
+		<url-pattern>/apriori</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>fpgrow</servlet-name>
+		<url-pattern>/fpgrow</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>eclat</servlet-name>
+		<url-pattern>/eclat</url-pattern>
+	</servlet-mapping>
+	
+</web-app>

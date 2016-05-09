@@ -1,0 +1,70 @@
+/*------------------------------------------
+                  重置 bootstrap 样式
+ ------------------------------------------*/
+body {
+  font-family: "微软雅黑", Arial, Helvetica, Sans-Serif;
+  font-weight: 300;
+  background-color: #efefef;
+}
+
+a, a:hover {
+  color: #77CCDD;
+  text-decoration: none;
+}
+
+
+/*------------------------------------------
+                  导航栏
+ ------------------------------------------*/
+
+nav {
+  background: #77CCDD;
+}
+
+nav a {
+  color: #fff;
+}
+
+
+/*------------------------------------------
+                  标题栏
+ ------------------------------------------*/
+header {
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+
+
+/*------------------------------------------
+                  内容区
+ ------------------------------------------*/
+#sidebar .panel-heading {
+  background: #888;
+}
+
+#midCol .panel-heading {
+  background: #555;
+}
+
+#content .panel-heading {
+  background: #222;
+}
+
+.panel, .panel-heading {
+  border-radius: 0;
+  border-width: 0;
+  -webkit-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.09);
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.09);
+}
+
+.panel-heading {
+  color: #fff !important;
+}
+
+/* 去除 margin */
+@media (min-width: 992px) {
+  .no-gutter.row > div[class*='col-md'] {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

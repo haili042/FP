@@ -1,0 +1,9 @@
+WebRoot/node_modules
+
+*.class
+
+.classpath
+
+.idea
+
+.settings
