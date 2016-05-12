@@ -12,6 +12,9 @@ a, a:hover {
   text-decoration: none;
 }
 
+hr {
+  margin-bottom: 0;
+}
 
 /*------------------------------------------
                   导航栏

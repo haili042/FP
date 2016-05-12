@@ -1,6 +1,6 @@
 
 
-$(function () {
+(function () {
 
     /*------------------------------------------
                     生成图表
@@ -120,11 +120,19 @@ $(function () {
     		accidents: 0,
     		mushroom: 1,
     		T10I4D100K: 2
-    	}
+    	},
+    	minSups = [ 0.60 ]
     ;
+    
     function getData(algorithm, datasets) {
+    	var url = basePath + algorithm,
+    		params = { 
+    			fileName: datasets,
+    			minSups: minSups
+    		};
+    	
         return $.ajax({
-            url: basePath + algorithm + '?fileName=' + datasets,
+            url: Tool.addUrlParams(url, params),
             type: 'get',
             dataType: 'json'
         });
@@ -135,20 +143,52 @@ $(function () {
 	------------------------------------------*/
     var timeInit = 0, 
     	interval;
+    
     function timer() {
     	return setInterval(function() {
     		$('#time').text(++timeInit);
     	}, 1);
     }
-
+    
+    /*------------------------------------------
+    		支持度
+	------------------------------------------*/
+    var minSupTemplate = $('#minSup').text();
+    
+    function addMinSup(data) {
+    	var html = minSupTemplate.replace(/{{minSup}}/g, data),
+    		elem = $(html);
+    	
+    	$('#minSupWraper').append(elem);
+    	
+        // 下载按钮
+        elem.find('.fp-res-download').click(function(e) {
+        	var minsup = $(this).attr('minsup'),
+        		url = basePath = 'download',
+        		params = {
+		    		'algorithm': algorithm,
+		    		'fileName': datasets,
+		    		'minSup': minsup
+    	    	};
+        	
+        	window.open(Tool.addUrlParams(url, params));
+        });
+    }
+    minSups.forEach(function(v, k) {
+    	addMinSup(v);
+    });
+    
+    
     /*------------------------------------------
 			事件绑定
 	------------------------------------------*/
+    // 选择类型
     $('.algorithmType').click(function(e) {
     	algorithm = this.id;
     	$('#algorithmType').text(this.text);
     });
     
+    // 开始按钮
     $('#startBtn').click(function(e) {
     	$('.fp-state').toggle();
     	$('.fp-progress').toggle();
@@ -172,10 +212,12 @@ $(function () {
     	
     });
     
+    // 取消按钮
     $('#cancelBtn').click(function(e) {
     	$('.fp-state').toggle();
     	$('.fp-progress').toggle();
     });
     
-    
-});
+
+
+})(Tool);

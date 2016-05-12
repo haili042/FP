@@ -20,7 +20,7 @@
 	</filter-mapping>
 
 
-	<!-- 请求映射 -->
+	<!-- 请求名称 -->
 	<servlet>
 		<servlet-name>apriori</servlet-name>
 		<servlet-class>com.fp.mining.apriori.Apriori</servlet-class>
@@ -36,6 +36,13 @@
 		<servlet-class>com.fp.mining.eclat.Eclat</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>download</servlet-name>
+		<servlet-class>com.fp.util.Download</servlet-class>
+	</servlet>
+	
+	
+	<!-- 请求映射 -->
 	<servlet-mapping>
 		<servlet-name>apriori</servlet-name>
 		<url-pattern>/apriori</url-pattern>
@@ -49,6 +56,11 @@
 	<servlet-mapping>
 		<servlet-name>eclat</servlet-name>
 		<url-pattern>/eclat</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>download</servlet-name>
+		<url-pattern>/download</url-pattern>
 	</servlet-mapping>
 	
 </web-app>

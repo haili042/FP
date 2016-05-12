@@ -29,7 +29,9 @@ import com.alibaba.fastjson.JSONObject;
  */  
   
 public class Apriori extends HttpServlet{  
-    private int minSup;//最小支持度  
+	private static final long serialVersionUID = -3377491874311806125L;
+
+	private int minSup;//最小支持度  
 	
     private static List<Set<String>> dataTrans;//以List<Set<String>>格式保存的事物数据库,利用Set的有序性  
       
@@ -142,7 +144,6 @@ public class Apriori extends HttpServlet{
             if(allKItem.get(kItem) >= minSup) {  
                 result.put(kItem, allKItem.get(kItem));  
             }  
-            System.out.println("...");
         }  
         return result;  
     }  
@@ -263,8 +264,15 @@ public class Apriori extends HttpServlet{
 		System.out.println(realPath);
 
 		Apriori apriori = new Apriori();
-		double[] threshold = { 0.25, 0.20, 0.15, 0.10, 0.05 };
 
+		String minSupStr = req.getParameter("minSups");
+		String [] minSups = minSupStr.split(",");
+		
+		double[] threshold = new double[minSups.length];
+		for (int i = 0; i < minSups.length; i++) {
+			threshold[i] = Double.parseDouble(minSups[i]);
+		}
+		
 		// String srcFile = "dataset/statical/mushroom.dat";
 		String srcFile = realPath + "dataset/statical/accidents.dat";
 		String shortFileName = srcFile.split("/")[2];
