@@ -27,8 +27,8 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>fpgrow</servlet-name>
-		<servlet-class>com.fp.mining.fpgrow.FPGrow</servlet-class>
+		<servlet-name>fpgrowth</servlet-name>
+		<servlet-class>com.fp.mining.fpgrowth.FPGrowth</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -49,8 +49,8 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>fpgrow</servlet-name>
-		<url-pattern>/fpgrow</url-pattern>
+		<servlet-name>fpgrowth</servlet-name>
+		<url-pattern>/fpgrowth</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

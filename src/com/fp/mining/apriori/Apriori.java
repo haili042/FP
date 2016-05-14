@@ -1,6 +1,7 @@
 package com.fp.mining.apriori;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -22,13 +23,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fp.util.DataIO;
 
 
 /**
  * 频繁模式挖掘算法Apriori实现 
  */  
   
-public class Apriori extends HttpServlet{  
+public class Apriori extends HttpServlet {  
 	private static final long serialVersionUID = -3377491874311806125L;
 
 	private int minSup;//最小支持度  
@@ -181,15 +183,15 @@ public class Apriori extends HttpServlet{
      * @return int 频繁i项集的数目 
      * @throws IOException  
      */  
-    private int printMap(Map<Set<String>, Integer> f1Map, FileWriter tgFileWriter) throws IOException {  
+    private int printMap(Map<Set<String>, Integer> f1Map, BufferedWriter bw) throws IOException {  
         // TODO Auto-generated method stub  
         for(Map.Entry<Set<String>, Integer> f1MapItem : f1Map.entrySet()){  
             for(String p : f1MapItem.getKey()){  
-                tgFileWriter.append(p + " ");  
+            	bw.append(p + " ");  
             }  
-            tgFileWriter.append(": " + f1MapItem.getValue() + "\n");  
+            bw.append(": " + f1MapItem.getValue() + "\n");  
         }  
-        tgFileWriter.flush();  
+        bw.flush();  
         return f1Map.size();  
     }  
       
@@ -227,12 +229,10 @@ public class Apriori extends HttpServlet{
      * @return List<String> 保存事务的容器 
      * @throws IOException  
      */  
-    private List<Set<String>> readTrans(String fileDir) {  
+    private List<Set<String>> readTrans(BufferedReader br) {  
         // TODO Auto-generated method stub  
         List<Set<String>> records = new ArrayList<Set<String>>();   
         try {   
-            FileReader fr = new FileReader(new File(fileDir));   
-            BufferedReader br = new BufferedReader(fr);   
          
             String line = null;   
             while ((line = br.readLine()) != null) {   
@@ -265,66 +265,59 @@ public class Apriori extends HttpServlet{
 
 		Apriori apriori = new Apriori();
 
-		String minSupStr = req.getParameter("minSups");
-		String [] minSups = minSupStr.split(",");
+		String minSupStr = req.getParameter("minSup");
+//		String [] minSups = minSupStr.split(",");
 		
-		double[] threshold = new double[minSups.length];
-		for (int i = 0; i < minSups.length; i++) {
-			threshold[i] = Double.parseDouble(minSups[i]);
-		}
+//		double[] threshold = new double[minSups.length];
+//		for (int i = 0; i < minSups.length; i++) {
+//			threshold[i] = Double.parseDouble(minSups[i]);
+//		}
+		double threshold = Double.parseDouble(minSupStr);
 		
-		// String srcFile = "dataset/statical/mushroom.dat";
-		String srcFile = realPath + "dataset/statical/accidents.dat";
-		String shortFileName = srcFile.split("/")[2];
+		DataIO dataIO = new DataIO(req, res);
+//		String targetFile = dataIO.getWritePath() + dataIO.getFileName();
+		BufferedWriter bw = dataIO.wirte();
 
-		File destDir = new File(realPath + "result/apriori");
-		if (!destDir.exists()) {
-			destDir.mkdir();
-		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd hhmmss");
-		String time = "(" + sdf.format(new Date()) + ")";
-
-		String targetFile = realPath + "result/apriori/"
-				+ shortFileName.replaceAll("(?=\\.)", time);
-
-		dataTrans = apriori.readTrans(srcFile);
-		for (int k = 0; k < threshold.length; k++) {
-			System.out.println(srcFile + " threshold: " + threshold[k]);
-			long totalItem = 0;
-			long totalTime = 0;
-			FileWriter tgFileWriter = new FileWriter(targetFile
-					+ (threshold[k] * 100));
-			apriori.setMinSup((int) (dataTrans.size() * threshold[k]));
-			long startTime = System.currentTimeMillis();
-			Map<String, Integer> f1Set = apriori.findFP1Items(dataTrans);
-			long endTime = System.currentTimeMillis();
-			totalTime += endTime - startTime;
-
-			//频繁1项集信息得加入支持度 
-			Map<Set<String>, Integer> f1Map = new HashMap<Set<String>, Integer>();
-			for (Map.Entry<String, Integer> f1Item : f1Set.entrySet()) {
-				Set<String> fs = new HashSet<String>();
-				fs.add(f1Item.getKey());
-				f1Map.put(fs, f1Item.getValue());
-			}
-
-			totalItem += apriori.printMap(f1Map, tgFileWriter);
-			Map<Set<String>, Integer> result = f1Map;
-			do {
-				startTime = System.currentTimeMillis();
-				result = apriori.genNextKItem(result);
-				endTime = System.currentTimeMillis();
-				totalTime += endTime - startTime; // 毫秒
-				totalItem += apriori.printMap(result, tgFileWriter);
-			} while (result.size() != 0);
-			tgFileWriter.close();
-			
-			resultData.put("time", totalTime);
-			resultData.put("total", totalItem);
-		}
+		dataTrans = apriori.readTrans(dataIO.read());
 		
-		String result = JSONObject.toJSONString(resultData);
-		out.println(result);
+//		for (int k = 0; k < threshold.length; k++) {
+		System.out.println(" threshold: " + threshold);
+		
+		long totalItem = 0;
+		long totalTime = 0;
+		
+		apriori.setMinSup((int) (dataTrans.size() * threshold));
+		long startTime = System.currentTimeMillis();
+		Map<String, Integer> f1Set = apriori.findFP1Items(dataTrans);
+		long endTime = System.currentTimeMillis();
+		totalTime += endTime - startTime;
+
+		//频繁1项集信息得加入支持度 
+		Map<Set<String>, Integer> f1Map = new HashMap<Set<String>, Integer>();
+		for (Map.Entry<String, Integer> f1Item : f1Set.entrySet()) {
+			Set<String> fs = new HashSet<String>();
+			fs.add(f1Item.getKey());
+			f1Map.put(fs, f1Item.getValue());
+		}
+
+		totalItem += apriori.printMap(f1Map, bw);
+		Map<Set<String>, Integer> result = f1Map;
+		do {
+			startTime = System.currentTimeMillis();
+			result = apriori.genNextKItem(result);
+			endTime = System.currentTimeMillis();
+			totalTime += endTime - startTime; // 毫秒
+			totalItem += apriori.printMap(result, bw);
+		} while (result.size() != 0);
+		bw.close();
+		
+		resultData.put("time", totalTime);
+		resultData.put("total", totalItem);
+
+//		}
+		
+		String resultStr = JSONObject.toJSONString(resultData);
+		out.println(resultStr);
 		out.flush();
 		out.close();
 	}

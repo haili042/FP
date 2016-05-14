@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,22 +21,22 @@ public class Download extends HttpServlet {
 
 	private static String path = "/result";
 	
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
+	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 		
 		try {
-			String algorithm = request.getParameter("algorithm");
-			String fileName = request.getParameter("fileName");
-			String minSup = request.getParameter("minSup");
+			String realPath = req.getServletContext().getRealPath("/");
+			String algorithm = req.getParameter("algorithm");
+			String minSup = req.getParameter("minSup");
+			String fileName = req.getParameter("fileName") + "_" + minSup + ".dat";
+			String filePath = realPath + path + "\\" + algorithm + "\\" + fileName;
 			
-			String filepath = request.getParameter("path");
-			response.setContentType("text/plain");
-			response.setHeader("Location", fileName);
-			response.setHeader("Content-Disposition", "attachment; filename="
+			res.setContentType("text/plain");
+			res.setHeader("Location", fileName);
+			res.setHeader("Content-Disposition", "attachment; filename="
 					+ fileName);
-			OutputStream outputStream = response.getOutputStream();
-			InputStream inputStream = new FileInputStream(filepath
-					+ fileName);
+			OutputStream outputStream = res.getOutputStream();
+			InputStream inputStream = new FileInputStream(filePath);
 			byte[] buffer = new byte[1024];
 			int i = -1;
 			while ((i = inputStream.read(buffer)) != -1) {

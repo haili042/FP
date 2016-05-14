@@ -5,13 +5,109 @@
     /*------------------------------------------
                     生成图表
      ------------------------------------------*/
-
+    var basePath = window.location.href, 
+		algorithm = 'apriori',
+		algorithmLib = {
+			apriori: 0,
+			fpgrowth: 1,
+			eclat: 2
+		},
+		datasets = 'accidents',
+		datasetsLib = {
+			accidents: 0,
+			mushroom: 1,
+			T10I4D100K: 2
+		},
+		minSups = [],
+		cbArr = [] // 回调函数队列
+	;
+    
     var colors = Highcharts.getOptions().colors,
-        data = [0, 0, 0];
-
+    	chartData = {
+	    	'apriori': [{
+	            name: 'apriori',
+	            y: 0,
+	            drilldown: 'accidents'
+	        }, {
+	            name: 'fpgrowth',
+	            y: 0,
+	            drilldown: 'mushroom'
+	        }, {
+	            name: 'eclat',
+	            y: 0,
+	            drilldown: 'T10I4D100K'
+	        }],
+			'fpgrowth': [{
+	            name: 'apriori',
+	            y: 0,
+	            drilldown: 'accidents'
+	        }, {
+	            name: 'fpgrowth',
+	            y: 0,
+	            drilldown: 'mushroom'
+	        }, {
+	            name: 'eclat',
+	            y: 0,
+	            drilldown: 'T10I4D100K'
+	        }],
+			'eclat': [{
+	            name: 'apriori',
+	            y: 0,
+	            drilldown: 'accidents'
+	        }, {
+	            name: 'fpgrowth',
+	            y: 0,
+	            drilldown: 'mushroom'
+	        }, {
+	            name: 'eclat',
+	            y: 0,
+	            drilldown: 'T10I4D100K'
+	        }]
+    	},
+    	subChartData = {
+	    	'apriori': [{
+                name: 'accidents',
+                data: []
+            }, {
+                name: 'mushroom',
+                data: []
+            }, {
+                name: 'T10I4D100K',
+                data: []
+            }],
+			'fpgrowth': [{
+                name: 'accidents',
+                data: []
+            }, {
+                name: 'mushroom',
+                data: []
+            }, {
+                name: 'T10I4D100K',
+                data: []
+            }],
+			'eclat': [{
+                name: 'accidents',
+                data: []
+            }, {
+                name: 'mushroom',
+                data: []
+            }, {
+                name: 'T10I4D100K',
+                data: []
+            }]
+    	}
+    ;
+    
     var chart = $('#lineChart').highcharts({
             chart: {
-                type: 'bar'
+                type: 'bar',
+                events: {
+                	drilldown: function (e) {
+                        var chart = this;
+                        series = subChartData[e.point.name][datasetsLib[e.point.series.name]];
+                        chart.addSeriesAsDrilldown(e.point, series);
+                	}
+                }
             },
             title: {
                 text: '关联规则挖掘算法时间比较'
@@ -20,7 +116,7 @@
                 enabled: false  // 隐藏公司名称
             },
             xAxis: {
-                categories: ['Apriori', 'FPGrowth', 'Eclat']
+            	type: 'category'
             },
             yAxis: {
             	min: 0,
@@ -33,7 +129,7 @@
 	            }
             },
             plotOptions: {
-                bar: {
+            	series: {
                     dataLabels: {
                         enabled: true
                     }
@@ -44,7 +140,7 @@
                 align: 'right',
                 verticalAlign: 'top',
                 x: -40,
-                y: 100,
+                y: 150,
                 floating: true,
                 borderWidth: 1,
                 backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
@@ -53,82 +149,45 @@
             tooltip: {
                 formatter: function() {
                     var point = this.point,
-                        s = this.x +' : <b>耗时'+ this.y +'ms</b><br/>';
+                        s = point.name + '算法, ' + point.drilldown + '数据集 : <b>共耗时'+ this.y +'ms</b><br/>';
                     return s;
                 }
             },
             // 正常图表
             series: [{
-            	name: 'accidents 数据集',
-            	data: data
+            	name: 'accidents',
+            	data: chartData["apriori"],
+        		drilldown: 'accidents'
             }, {
-            	name: 'mushroom 数据集',
-            	data: data
+            	name: 'mushroom',
+            	data: chartData["fpgrowth"],
+            	drilldown: 'mushroom'
             }, {
-            	name: 'T10I4D100K 数据集',
-                data: data
+            	name: 'T10I4D100K',
+            	data: chartData["eclat"],
+        		drilldown: 'T10I4D100K'
             }],
             // 下钻图表
             drilldown: {
-                series: [{
-                    id: 'animals',
-                    data: [
-	                    ['Cats', 4],
-	                    ['Dogs', 2],
-	                    ['Cows', 1],
-	                    ['Sheep', 2],
-	                    ['Pigs', 1]
-                    ]
-                }, {
-                    id: 'fruits',
-                    data: [
-					    ['Cats', 4],
-					    ['Dogs', 2],
-					    ['Cows', 1],
-					    ['Sheep', 2],
-					    ['Pigs', 1]
-                    ]
-                }, {
-                    id: 'cars',
-                    data: [
-                        ['Cats', 4],
-                        ['Dogs', 2],
-                        ['Cows', 1],
-                        ['Sheep', 2],
-                        ['Pigs', 1]
-                    ]
-                }]
-            },
-            exporting: {
-                enabled: false
+                series: []
             }
+//            exporting: {
+//                enabled: false
+//            }
         })
         .highcharts(); // return chart
 
+    
     /*------------------------------------------
                     获取数据
      ------------------------------------------*/
-    var basePath = window.location.href, 
-    	algorithm = 'apriori',
-    	algorithmLib = {
-    		apriori: 0,
-    		fpgrow: 1,
-    		eclat: 2
-    	},
-    	datasets = 'accidents',
-    	datasetsLib = {
-    		accidents: 0,
-    		mushroom: 1,
-    		T10I4D100K: 2
-    	},
-    	minSups = [ 0.60 ]
-    ;
     
-    function getData(algorithm, datasets) {
+    function getData(algorithm, datasets, minSup) {
     	var url = basePath + algorithm,
     		params = { 
+    			algorithm: algorithm,
     			fileName: datasets,
-    			minSups: minSups
+                minSup: minSup
     		};
     	
         return $.ajax({
@@ -138,17 +197,6 @@
         });
     }
     
-    /*------------------------------------------
-    		计时器
-	------------------------------------------*/
-    var timeInit = 0, 
-    	interval;
-    
-    function timer() {
-    	return setInterval(function() {
-    		$('#time').text(++timeInit);
-    	}, 1);
-    }
     
     /*------------------------------------------
     		支持度
@@ -157,8 +205,10 @@
     
     function addMinSup(data) {
     	var html = minSupTemplate.replace(/{{minSup}}/g, data),
-    		elem = $(html);
+    		elem = $(html)
+		;
     	
+    	minSups.push(data);
     	$('#minSupWraper').append(elem);
     	
         // 下载按钮
@@ -174,9 +224,9 @@
         	window.open(Tool.addUrlParams(url, params));
         });
     }
-    minSups.forEach(function(v, k) {
-    	addMinSup(v);
-    });
+    
+    addMinSup(0.3);
+    addMinSup(0.5);
     
     
     /*------------------------------------------
@@ -190,34 +240,77 @@
     
     // 开始按钮
     $('#startBtn').click(function(e) {
+    	var totalTime = 0;
     	$('.fp-state').toggle();
     	$('.fp-progress').toggle();
 
     	datasets = $("#datasets").val();
-    	var promise = getData(algorithm, datasets);
+
+    	// 回到第一层
+    	try {
+    		chart.drillUp();
+    	} catch(e) {}
     	
-    	// 完成之后
-    	promise.done(function (res) {
-    		console.log(res);
-    		var time = res.time || 0,
-    			data = [0, 0, 0];
+    	// 封装回调函数队列
+    	minSups.forEach(function(v, k) {
+			var dtd = $.Deferred();
     		
-    		data[algorithmLib[algorithm]] = time;
-    		
-    		chart.series[datasetsLib[datasets]].setData(data);
-    		$('.fp-time').text(time);
-    		$('.fp-state').toggle();
-    		$('.fp-progress').toggle();
+			
+			(function(algorithm, datasets, v, k) {
+				getData(algorithm, datasets, v).then(function (res) {
+					console.log(res);
+		    		var time = res.time || 0,
+		    			trElem = $('#minSupWraper').find('[minsup="'+v+'"]');
+		    		
+		    		var item = [ (v + ''), time ];
+		    		subChartData[algorithm][datasetsLib[datasets]].data.push(item);
+		    		
+		    		totalTime += time;
+		    		chartData[algorithm][algorithmLib[algorithm]].y = totalTime;
+		    		chart.series[datasetsLib[datasets]].setData(chartData[algorithm]);
+		    		
+		    		
+		    		trElem.find('.fp-time').text(time);
+		    		trElem.find('.fp-state').toggle();
+		    		trElem.find('.fp-progress').toggle();
+					
+					dtd.resolve(res);
+				});
+			})(algorithm, datasets, v, k);
+    			
+			setTimeout(function() {
+				chart.redraw(); // 重绘
+			}, 0);
+    		cbArr.push(dtd.promise());
     	});
-    	
+        
+    	// 遍历回调函数队列
+    	cbArr.reduce(function(cur, next) {
+    		return cur.then(next);
+    	});
+
     });
     
     // 取消按钮
     $('#cancelBtn').click(function(e) {
+    	chartData;
+    	debugger
     	$('.fp-state').toggle();
     	$('.fp-progress').toggle();
     });
     
+    // 添加支持度按钮
+    $('#addMinSupBtn').click(function(e) {
+    	var elem = $('#addMinSupInp');
+    	var val = elem.val().trim();
+    	
+    	if (val != '' && val >= 0.25 && val <= 0.8) {
+    		addMinSup(val);
+    	} else {
+    		elem.focus();
+    	}
+    	elem.val('');
+    });
 
 
 })(Tool);

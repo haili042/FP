@@ -33,7 +33,6 @@ import com.fp.util.DataIO;
 public class Eclat extends HttpServlet{
 
 
-	private float limitValue = 0.25f;
 	private int transNum = 0;
 	private ArrayList<HeadNode> array = new ArrayList<HeadNode>();
 	private HashHeadNode[] hashTable;// 存放临时生成的频繁项集，作为重复查询的备选集合
@@ -50,7 +49,7 @@ public class Eclat extends HttpServlet{
 	/**
 	 * 第一遍扫描数据库，确定Itemset,根据阈值计算出支持度数
 	 */
-	public void init(DataIO dataIO) {
+	public void init(DataIO dataIO, double threshold) {
 		Set itemSet = new TreeSet();
 		MyMap<Integer, Integer> itemMap = new MyMap<Integer, Integer>();
 		
@@ -76,7 +75,7 @@ public class Eclat extends HttpServlet{
 			// System.out.println("itemsize:"+itemSet.size());
 			// System.out.println("trans: "+transNum);
 			// ItemSet.limitSupport=(int)Math.ceil(transNum*limitValue);//上取整
-			ItemSet.limitSupport = (int) Math.floor(transNum * limitValue);// 下取整
+			ItemSet.limitSupport = (int) Math.floor(transNum * threshold);// 下取整
 			ItemSet.ItemSize = (Integer) itemMap.lastKey();
 			ItemSet.TransSize = transNum;
 			hashTable = new HashHeadNode[ItemSet.ItemSize * 3];// 生成项集hash表
@@ -385,8 +384,11 @@ public class Eclat extends HttpServlet{
 
 		DataIO dataIO = new DataIO(req, res);
 		
+		String minSupStr = req.getParameter("minSup");
+		double threshold = Double.parseDouble(minSupStr);
+				
 		long begin = System.currentTimeMillis();
-		e.init(dataIO);
+		e.init(dataIO, threshold);
 		e.start();
 		long end = System.currentTimeMillis();
 

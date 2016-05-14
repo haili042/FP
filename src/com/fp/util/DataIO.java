@@ -16,23 +16,37 @@ import javax.servlet.http.HttpServletResponse;
 
 public class DataIO {
 
+	private String algorithm; // 文件名
 	private String fileName; // 文件名
-	private String destPath = "result/apriori";
-	private String realPath;
+	private String minSup; // 文件名
+	private String realPath; // 项目路径
+	private String srcPath = "dataset"; // 输出
+	private String destPath = "result"; // 输出
+	private String readPath;
+	private String writePath;
+	
 	private File file; // 文件
-	private static Map<String, String> dataSets = new HashMap<>(); // 数据集
+	private Map<String, String> datasets = new HashMap<>();
 	
 	{
-		dataSets.put("accidents", "dataset\\statical\\accidents.dat"); // 2125
-		dataSets.put("mushroom", "dataset\\statical\\mushroom.dat"); // 8142
-		dataSets.put("T10I4D100K", "dataset\\statical\\T10I4D100K.dat"); // 100000
+		datasets.put("accidents", "accidents.dat");
+		datasets.put("mushroom", "mushroom.dat");
+		datasets.put("T10I4D100K", "T10I4D100K.dat");
 	}
+	
 
 	// 构造函数
 	public DataIO(HttpServletRequest req, HttpServletResponse res) {
+		String fileName = req.getParameter("fileName"); // 文件名参数
+		
+		this.algorithm = req.getParameter("algorithm");
+		this.fileName = fileName;
+		this.minSup = req.getParameter("minSup");
 		this.realPath = req.getServletContext().getRealPath("/"); // 项目路径
-		this.fileName = req.getParameter("fileName"); // 文件名参数
-		this.file = new File(realPath + dataSets.get(fileName)); // 事务数据文件名
+		this.readPath = realPath + srcPath + "\\";
+		this.writePath = realPath + destPath + "\\" + algorithm;
+		this.file = new File(this.readPath + "\\" + datasets.get(fileName)); 
+		
 	}
 	
 	// 读静态数据
@@ -53,30 +67,48 @@ public class DataIO {
 	// 写入结果文件流
 	public BufferedWriter wirte() {
 		
-		// 给文件加个时间戳
-		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd hhmmss");
-		String time = "(" + sdf.format(new Date()) + ")";
-
 		BufferedWriter bw = null;
 		try {
 			// 没有该目录就创建目录
-			File dir = new File(destPath);
+			File dir = new File(this.writePath);
 			if (!dir.exists()) {
 				dir.mkdir();
 			}
 			
 			// 创建空文件
-			File tempFile = new File(realPath + "/" + destPath + "/" + fileName + time + ".dat");
+			File tempFile = new File(this.writePath + "\\" + fileName + "_" + minSup + ".dat");
+			
+			// 存在就删除原来的
 			if (tempFile.exists()) {
 				tempFile.delete();
 			}
 			
 			bw = new BufferedWriter(new FileWriter(tempFile));
 		} catch (IOException e) {
-			System.out.println("读取事务文件失败...");
+			System.out.println("写入结果文件失败...");
 			e.printStackTrace();
 		}
 		return bw;
+	}
+	
+	// 读取文件名
+	public String getMinSup() {
+		return this.minSup;
+	}
+	
+	// 读取文件名
+	public String getFileName() {
+		return this.fileName;
+	}
+	
+	// 读取路径
+	public String getReadPath() {
+		return this.readPath;
+	}
+	
+	// 读取路径
+	public String getWritePath() {
+		return this.writePath;
 	}
 
 }
