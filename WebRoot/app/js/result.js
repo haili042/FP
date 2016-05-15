@@ -1,6 +1,5 @@
 
-
-(function () {
+(function (Tool, Router, ChartDatas) {
 
     /*------------------------------------------
                     生成图表
@@ -98,6 +97,10 @@
     	}
     ;
     
+
+    /*------------------------------------------
+                    总表
+     ------------------------------------------*/
     var chart = $('#lineChart').highcharts({
             chart: {
                 type: 'bar',
@@ -110,7 +113,7 @@
                 }
             },
             title: {
-                text: '关联规则挖掘算法时间比较'
+                text: 'Apriori'
             },
             credits: {
                 enabled: false  // 隐藏公司名称
@@ -121,8 +124,7 @@
             yAxis: {
             	min: 0,
                 title: {
-                    text: 'time (ms)',
-                    align: 'high'
+                    text: 'time (ms)'
                 },
 	            labels: {
 	                overflow: 'justify'
@@ -171,226 +173,87 @@
             drilldown: {
                 series: []
             }
-//            exporting: {
-//                enabled: false
-//            }
         })
         .highcharts(); // return chart
-
-    $('#aprioriChart').highcharts({
-        chart: {
+    
+    
+    // 都一样的配置
+    var algorithmCfg = {
+		chart: {
             type: 'line'
         },
-        xAxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        },
-        legend: {
-            layout: 'vertical',
-            floating: true,
-            backgroundColor: '#FFFFFF',
-            align: 'right',
-            verticalAlign: 'top',
-            y: 60,
-            x: -60
-        },
-        tooltip: {
-            formatter: function () {
-                return '<b>' + this.series.name + '</b><br/>' +
-                    this.x + ': ' + this.y;
+        yAxis: {
+        	min: 0,
+            title: {
+                text: 'time (ms)'
+            },
+            labels: {
+                overflow: 'justify'
             }
         },
-        series: [{
-            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-        }]
-    });
-    
-    $('#fpgrowthChart').highcharts({
-    	chart: {
-    		type: 'line'
-    	},
-    	xAxis: {
-    		categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    	},
+        credits: {
+            enabled: false  // 隐藏公司名称
+        },
     	legend: {
     		layout: 'vertical',
     		floating: true,
-    		backgroundColor: '#FFFFFF',
     		align: 'right',
     		verticalAlign: 'top',
-    		y: 60,
-    		x: -60
+    		y: 32,
+    		x: 32
     	},
-    	tooltip: {
-    		formatter: function () {
-    			return '<b>' + this.series.name + '</b><br/>' +
-    			this.x + ': ' + this.y;
-    		}
-    	},
-    	series: [{
-    		data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-    	}]
-    });
-    
-    $('#eclatChart').highcharts({
-    	chart: {
-    		type: 'line'
-    	},
-    	xAxis: {
-    		categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    	},
-    	legend: {
-    		layout: 'vertical',
-    		floating: true,
-    		backgroundColor: '#FFFFFF',
-    		align: 'right',
-    		verticalAlign: 'top',
-    		y: 60,
-    		x: -60
-    	},
-    	tooltip: {
-    		formatter: function () {
-    			return '<b>' + this.series.name + '</b><br/>' +
-    			this.x + ': ' + this.y;
-    		}
-    	},
-    	series: [{
-    		data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-    	}]
-    });
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.series.name + '数据集</b><br/>' +
+                    '支持度:' + this.x + ': 耗时' + this.y + 'ms';
+            }
+        }
+    };
     
     /*------------------------------------------
-                    获取数据
+                    apriroi表
      ------------------------------------------*/
-    
-    function getData(algorithm, datasets, minSup) {
-    	var url = basePath + algorithm,
-    		params = { 
-    			algorithm: algorithm,
-    			fileName: datasets,
-                minSup: minSup
-    		};
-    	
-        return $.ajax({
-            url: Tool.addUrlParams(url, params),
-            type: 'get',
-            dataType: 'json'
-        });
-    }
+    // aprioriChart 配置
+    var aprioriChartCfg = $.extend({}, algorithmCfg, {
+    	xAxis: {
+    		categories: ChartDatas.getCatagories('apriori')
+    	},
+    	title: {
+    		text: 'Apirori 算法'
+    	},
+    	series: ChartDatas.getSeries('apriori')
+    });
+    var aprioriChart = $('#aprioriChart').highcharts(aprioriChartCfg);
+
+    /*------------------------------------------
+                    fp growth表
+     ------------------------------------------*/
+    // fpgrowthChart 配置
+    var fpgrowthChartCfg = $.extend({}, algorithmCfg, {
+    	xAxis: {
+    		categories: ChartDatas.getCatagories('fpgrowth')
+    	},
+    	title: {
+    		text: 'Fp-growth 算法'
+    	},
+    	series: ChartDatas.getSeries('fpgrowth')
+    });
+    var fpgrowthChart = $('#fpgrowthChart').highcharts(fpgrowthChartCfg);
     
     
     /*------------------------------------------
-    		支持度
-	------------------------------------------*/
-    var minSupTemplate = $('#minSup').text();
-    
-    function addMinSup(data) {
-    	var html = minSupTemplate.replace(/{{minSup}}/g, data),
-    		elem = $(html)
-		;
-    	
-    	minSups.push(data);
-    	$('#minSupWraper').append(elem);
-    	
-        // 下载按钮
-        elem.find('.fp-res-download').click(function(e) {
-        	var minsup = $(this).attr('minsup'),
-        		url = basePath = 'download',
-        		params = {
-		    		'algorithm': algorithm,
-		    		'fileName': datasets,
-		    		'minSup': minsup
-    	    	};
-        	
-        	window.open(Tool.addUrlParams(url, params));
-        });
-    }
-    
-    addMinSup(0.3);
-    addMinSup(0.5);
-    
-    
-    /*------------------------------------------
-			事件绑定
-	------------------------------------------*/
-    // 选择类型
-    $('.algorithmType').click(function(e) {
-    	algorithm = this.id;
-    	$('#algorithmType').text(this.text);
+                    eclat表
+     ------------------------------------------*/
+    // eclatChart 配置
+    var eclatChartCfg = $.extend({}, algorithmCfg, {
+    	xAxis: {
+    		categories: ChartDatas.getCatagories('eclat')
+    	},
+    	title: {
+    		text: 'Eclat 算法'
+    	},
+        series: ChartDatas.getSeries('eclat')
     });
-    
-    // 开始按钮
-    $('#startBtn').click(function(e) {
-    	var totalTime = 0;
-    	$('.fp-state').toggle();
-    	$('.fp-progress').toggle();
+    var eclatChart = $('#eclatChart').highcharts(eclatChartCfg);
 
-    	datasets = $("#datasets").val();
-
-    	// 回到第一层
-    	try {
-    		chart.drillUp();
-    	} catch(e) {}
-    	
-    	// 封装回调函数队列
-    	minSups.forEach(function(v, k) {
-			var dtd = $.Deferred();
-    		
-			
-			(function(algorithm, datasets, v, k) {
-				getData(algorithm, datasets, v).then(function (res) {
-					console.log(res);
-		    		var time = res.time || 0,
-		    			trElem = $('#minSupWraper').find('[minsup="'+v+'"]');
-		    		
-		    		var item = [ (v + ''), time ];
-		    		subChartData[algorithm][datasetsLib[datasets]].data.push(item);
-		    		
-		    		totalTime += time;
-		    		chartData[algorithm][algorithmLib[algorithm]].y = totalTime;
-		    		chart.series[datasetsLib[datasets]].setData(chartData[algorithm]);
-		    		
-		    		
-		    		trElem.find('.fp-time').text(time);
-		    		trElem.find('.fp-state').toggle();
-		    		trElem.find('.fp-progress').toggle();
-					
-					dtd.resolve(res);
-				});
-			})(algorithm, datasets, v, k);
-    			
-			setTimeout(function() {
-				chart.redraw(); // 重绘
-			}, 0);
-    		cbArr.push(dtd.promise());
-    	});
-        
-    	// 遍历回调函数队列
-    	cbArr.reduce(function(cur, next) {
-    		return cur.then(next);
-    	});
-
-    });
-    
-    // 取消按钮
-    $('#cancelBtn').click(function(e) {
-    	chartData;
-    	debugger
-    	$('.fp-state').toggle();
-    	$('.fp-progress').toggle();
-    });
-    
-    // 添加支持度按钮
-    $('#addMinSupBtn').click(function(e) {
-    	var elem = $('#addMinSupInp');
-    	var val = elem.val().trim();
-    	
-    	if (val != '' && val >= 0.25 && val <= 0.8) {
-    		addMinSup(val);
-    	} else {
-    		elem.focus();
-    	}
-    	elem.val('');
-    });
-
-
-})(Tool);
+})(Tool, Router, ChartDatas);

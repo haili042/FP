@@ -501,7 +501,9 @@ public class FPGrowth extends HttpServlet{
 		long time = end - begin;
 
 		resultData.put("time", time);
-		resultData.put("total", 0);
+		resultData.put("dataSet", req.getParameter("fileName"));
+		resultData.put("algorithm", "fpgrowth");
+		resultData.put("minSup", req.getParameter("minSup"));
 
 		String result = JSONObject.toJSONString(resultData);
 		out.println(result);

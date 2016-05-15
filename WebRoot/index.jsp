@@ -59,8 +59,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script src="app/js/frame.js"></script>
 
 <!--内容-->
-<!--标题-->
-
 <div class="container">
   <div class="row no-gutter" data-router="router"></div>
 </div>

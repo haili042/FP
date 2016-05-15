@@ -395,7 +395,9 @@ public class Eclat extends HttpServlet{
 		long time = end - begin;
 		
 		resultData.put("time", time);
-		resultData.put("total", Eclat.modSum);
+		resultData.put("dataSet", req.getParameter("fileName"));
+		resultData.put("algorithm", "eclat");
+		resultData.put("minSup", req.getParameter("minSup"));
 		
 		String result = JSONObject.toJSONString(resultData);
 		out.println(result);

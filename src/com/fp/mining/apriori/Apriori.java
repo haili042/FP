@@ -266,12 +266,6 @@ public class Apriori extends HttpServlet {
 		Apriori apriori = new Apriori();
 
 		String minSupStr = req.getParameter("minSup");
-//		String [] minSups = minSupStr.split(",");
-		
-//		double[] threshold = new double[minSups.length];
-//		for (int i = 0; i < minSups.length; i++) {
-//			threshold[i] = Double.parseDouble(minSups[i]);
-//		}
 		double threshold = Double.parseDouble(minSupStr);
 		
 		DataIO dataIO = new DataIO(req, res);
@@ -312,7 +306,9 @@ public class Apriori extends HttpServlet {
 		bw.close();
 		
 		resultData.put("time", totalTime);
-		resultData.put("total", totalItem);
+		resultData.put("dataSet", req.getParameter("fileName"));
+		resultData.put("algorithm", "apriori");
+		resultData.put("minSup", req.getParameter("minSup"));
 
 //		}
 		
