@@ -1,63 +1,75 @@
 /**
  * router
- * */
+ */
 var Router = (function($, Tool) {
-	var basePath = window.location.href;
+	var routerConfig, 
+		defaultRouter,
+		lastHash = ''; // 上次访问的路由
 	
+	// 路由事件
+	window.addEventListener('hashchange', function(e) {
+		var hash = window.location.hash;
+		go(hash);
+	}, false);
+
 	// 发起请求
-    function pagePromise(page) {
-        var url = basePath + 'app/tpl/' + page,
-            params = {
+	function pagePromise(url) {
+		return $.ajax({
+			url : url,
+			type : 'get'
+		});
+	}
 
-            };
+	// 跳转
+	function go(hash) {
+		var promise,
+			func;
 
-        return $.ajax({
-            url: Tool.addUrlParams(url, params),
-            type: 'get',
-            dataType: 'html'
-        });
-    }
+		if (hash === lastHash) {
+			return false;
+		}
+		for (var cfg in routerConfig) {
+			if (routerConfig.hasOwnProperty(cfg)) {
+				var reg = new RegExp(cfg + '\/?$');
 
-    // 跳转
-    function go(page) {
-//    	window.location.href += "#page1";
-//        var promise = pagePromise(page);
-//        promise.then(function(res) {
-//            var router = $('div[data-router=router]');
-//            router.empty();
-//            router.append(res);
-//        });
-        
-        var hash = location.hash, route, matchResult;
-        for (var routeIndex in this.routemap){
-          route = this.routemap[routeIndex];
-          matchResult = hash.match(route.rule);
-          if (matchResult){
-            route.func.apply(window, matchResult.slice(1));
-            return; 
-          }
-        }
-        this.defaultFunc();
-    }
+				// 匹配上url
+				if (reg.test(hash)) {
+					func = routerConfig[cfg].success;
+					promise = pagePromise(routerConfig[cfg].templateURL);
+					break;
+				}
+			}
+		}
+		
+		// 默认路由
+		if(!promise) {
+			lastHash = location.hash = defaultRouter.hash;
+			promise = pagePromise(defaultRouter.templateURL);
+		}
+		
+		promise.then(function(res) {
+			var router = $('div[data-router=router]'),
+				view = $(res);
+			
+			view.css({
+				'opacity': '0',
+			});
+			router.empty(); // 清空
+			router.append(view);
+			view.animate({
+				'opacity': '1',
+			});
+		});
+	}
 
-    // 配置路由
-    function config(routemap, defaultFunc) {
-        var that = this, rule, func;
-        this.routemap = [];
-        this.defaultFunc = defaultFunc;
-        for (var rule in routemap) {
-          if (!routemap.hasOwnProperty(rule)) continue;
-          that.routemap.push({
-            rule: new RegExp(rule, 'i'),
-            func: routemap[rule]
-          });       
-        }
-    }
+	// 配置路由
+	function config(rcfg, dfr) {
+		routerConfig = rcfg;
+		defaultRouter = dfr;
+	}
 
-    
-    return {
-    	config: config,
-        go: go
-    };
+	return {
+		config : config,
+		go: go
+	};
 })($, Tool);
-

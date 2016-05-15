@@ -1,23 +1,40 @@
 (function(Router) {
-
+	
 	// 配置路由
-	Router.config(
-	{
-		'#/list/' : function(cate, id) {
-			console.log('list', cate, id);
+	Router.config({
+		'#/aprioriInfo' : {
+			templateURL: 'app/tpl/aprioriInfo.html',
+			success: function() {
+				console.log('list', cate, id);
+			}
 		},
-		'#/show/' : function(id) {
-			console.log('show', id);
+		'#/fpgrowthInfo' : {
+			templateURL: 'app/tpl/fpgrowthInfo.html',
+			success: function() {
+				console.log('list', cate, id);
+			}
+		},
+		'#/eclatInfo' : {
+			templateURL: 'app/tpl/eclatInfo.html',
+			success: function() {
+				console.log('list', cate, id);
+			}
+		},
+		'#/result' : {
+			templateURL: 'app/tpl/result.html',
+			success: function() {
+				console.log('list', cate, id);
+			}
 		}
-	}, 
-	// 默认路由
-	function() {
-		console.log('default router');
+	}, {
+		// 默认路由
+		hash: '#/',
+		templateURL: 'app/tpl/main.html',
+		success: function() {
+			console.log('main', cate, id);
+		}
 	});
-	Router.go();
-
-	$('#page2').click(function(e) {
-		Router.go('algorithmInfo.html');
-	});
+	
+	Router.go('#/');
 
 })(Router);

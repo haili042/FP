@@ -1,0 +1,82 @@
+<header>
+  <div class="container">
+    <h1>apriori算法介绍</h1>
+  </div>
+</header>
+
+<!--第1栏-->
+<div class="col-md-4">
+  <div class="panel panel-default leftCol">
+    <div class="panel-heading">
+      算法简介
+    </div>
+
+    <div class="panel-body">
+      <p>
+        Apriori核心算法过程如下：
+        过单趟扫描数据库D计算出各个1项集的支持度，得 到频繁1项集的集合。
+        连接步：为了生成，预先生成,由2个只有一个项不同的属于的频集做一 个（k-2）JOIN运算得到的。
+        剪枝步：由于是的超集，所以可能有些元素不是频繁的。在 潜在k项集的某个子集不是中的成员是，则该潜在频繁项集不可能是频繁的可以从中移去。
+        通过 单趟扫描数据库D，计算中各个项集的支持度，将中不满足支持度的项集去掉形成。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!--第2栏-->
+<div class="col-md-8">
+  <div class="panel panel-default midCol">
+    <div class="panel-heading">
+      算法步骤
+    </div>
+
+    <div class="panel-body">
+
+      <!--第1行-->
+      <div class="row">
+        <div class="col-xs-12">
+          <pre class="text-info">
+// 找出频繁 1 项集
+     L1 =find_frequent_1-itemsets(D); 
+     For(k=2;Lk-1 !=null;k++){
+// 产生候选，并剪枝
+        Ck =apriori_gen(Lk-1 ); 
+// 扫描 D 进行候选计数
+        For each 事务t  in D{ 
+            Ct =subset(Ck,t); // 得到 t 的子集
+            For each 候选 c 属于 Ct
+                c.count++;
+        }
+		//返回候选项集中不小于最小支持度的项集
+        Lk ={c 属于 Ck | c.count&gt;=min_sup}
+}
+Return L= 所有的频繁集；
+
+第一步：连接（join）
+Procedure apriori_gen (Lk-1 :frequent(k-1)-itemsets)
+      For each 项集 l1 属于 Lk-1
+         For each 项集 l2 属于 Lk-1
+            If( (l1 [1]=l2 [1])&&( l1 [2]=l2 [2])&& ……&& (l1 [k-2]=l2 [k-2])&&(l1 [k-1]&lt;l2 [k-1]) ) 
+then{
+                    c = l1 连接 l2    // 连接步：产生候选
+				  //若k-1项集中已经存在子集c则进行剪枝
+                   if has_infrequent_subset(c, Lk-1 ) then
+                       delete c; // 剪枝步：删除非频繁候选
+                   else add c to Ck;
+                   }
+          Return Ck;
+
+第二步：剪枝（prune）&nbsp;
+Procedure has_infrequent_sub (c:candidate k-itemset; Lk-1 :frequent(k-1)-itemsets)
+         For each (k-1)-subset s of c
+            If s 不属于 Lk-1 then
+               Return true;
+         Return false;
+  
+          </pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

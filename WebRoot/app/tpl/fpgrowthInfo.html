@@ -1,0 +1,52 @@
+<header>
+  <div class="container">
+    <h1>FP-Growth算法介绍</h1>
+  </div>
+</header>
+
+<!--第1栏-->
+<div class="col-md-4">
+  <div class="panel panel-default leftCol">
+    <div class="panel-heading">
+      算法简介
+    </div>
+
+    <div class="panel-body">
+      <p>
+	fpgrowth核心算法过程如下：
+	不断地迭代FP-tree[4]  的构造和投影过程
+1、对于每个频繁项，构造它的条件投影数据库和投影FP-tree。
+2、对每个新构建的FP-tree重复这个过程，直到构造的新FP-tree为空，或者只包含一条路径。
+3、当构造的FP-tree为空时，其前缀即为频繁模式；当只包含一条路径时，通过枚举所有可能组合并与此树的前缀连接即可得到频繁模式。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!--第2栏-->
+<div class="col-md-8">
+  <div class="panel panel-default midCol">
+    <div class="panel-heading">
+      算法步骤
+    </div>
+
+    <div class="panel-body">
+
+      <!--第1行-->
+      <div class="row">
+        <div class="col-xs-12">
+          <pre class="text-info">
+主要步骤
+Step1 读取数据库，构造频繁1项集及FP-tree
+Step2 遍历FP-tree的头表，对于每个频繁项x，累积项x的所有前缀路径形成x的条件模式库CPB
+Step3 对CPB上每一条路径的节点更新计数为x的计数，根据CPB构造条件FP-tree
+Step4 从条件FP-tree中找到所有长路径，对该路径上的节点找出所有组合方式，然后合并计数
+Step5 将Step4中的频繁项集与x合并，得到包含x的频繁项集
+Step2-5 循环，直到遍历头表中的所有项  
+          </pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,619 @@
+<header>
+  <div class="container">
+    <h1>频繁项集挖掘算法</h1>
+  </div>
+</header>
+
+<!--第1栏-->
+<div class="col-md-2">
+  <div class="panel panel-default leftCol">
+    <div class="panel-heading">
+      算法类型
+    </div>
+
+    <div class="panel-body">
+      <ul class="nav">
+        <li><a href="javascript:void(0)" id="apriori" class="algorithmType">Apriori 算法</a></li>
+        <li><a href="javascript:void(0)" id="fpgrowth" class="algorithmType">FP-Grow 算法</a></li>
+        <li><a href="javascript:void(0)" id="eclat" class="algorithmType">Eclat 算法</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--第2栏-->
+<div class="col-md-3">
+  <div class="panel panel-default midCol">
+    <div class="panel-heading">
+      操作
+    </div>
+
+    <div class="panel-body">
+
+      <!--第1行-->
+      <div class="row">
+        <div class="col-xs-12">
+
+          <h4 id="algorithmType">Apriori 算法</h4>
+
+          <div class="form-group">
+            <select class="form-control" id="datasets">
+              <option value="accidents">accidents 数据集</option>
+              <option value="mushroom">mushroom 数据集</option>
+              <option value="T10I4D100K">T10I4D100K 数据集</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <button class="btn btn-primary" id="startBtn">开始</button>
+            <button class="btn btn-default" id="cancelBtn">取消</button>
+          </div>
+        </div>
+      </div>
+      <hr/>
+
+      <!--第2行-->
+      <div class="row">
+        <div class="col-xs-12">
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>
+                <h5>支持度</h5>
+              </th>
+              <th>
+                <h5 class="pull-right">状态</h5>
+              </th>
+            </tr>
+            </thead>
+            <tbody id="minSupWraper">
+
+            <script id="minSup" type="template">
+              <tr minsup="{{minSup}}">
+                <td>
+                  <h5>{{minSup}}</h5>
+                </td>
+                <td>
+                  <div class="fp-state pull-right">
+                    <span>耗时:</span>
+                    <span class="fp-time">0(ms)</span>
+                    <button class="btn btn-default fp-res-download" minsup="{{minSup}}">下载</button>
+                  </div>
+                  <div class="fp-progress" style="display: none;">
+                    <div class="progress progress-striped active" style="margin-bottom: 0;margin: 6px 0;">
+                      <div class="progress-bar progress-bar-success" style="width: 100%;">
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </script>
+            </tbody>
+
+            <tfoot>
+            <tr>
+              <td colspan="2">
+                <input type="text" class="form-control pull-left"
+                       style="width: 70%;" id="addMinSupInp" placeholder="输入范围0.25~0.8">
+                <button class="btn btn-default pull-right" style="border-radius: 50%;" id="addMinSupBtn">
+                  <i class="fa fa-plus"></i>
+                </button>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
+
+        </div>
+      </div>
+      <hr/>
+
+      <!--第3行-->
+      <div class="row">
+        <div class="col-xs-12">
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--第3栏-->
+
+<div class="col-md-7">
+  <div class="panel panel-default rightCol">
+    <div class="panel-heading">
+      结果分析
+    </div>
+
+    <div class="panel-body">
+
+      <!--第1行-->
+      <div class="row">
+        <div class="col-xs-12">
+
+          <table class="table table-striped table-hover table-condensed table-bordered">
+            <thead>
+            <tr>
+              <th class="text-center">
+                <h5>算法类型</h5>
+              </th>
+              <th class="text-center">
+                <h5>数据集</h5>
+              </th>
+              <th colspan="3" class="text-center">
+                <h5>支持度</h5>
+              </th>
+            </tr>
+            </thead>
+
+            <tbody id="resTableWrapper">
+
+            <tr>
+              <td rowspan="4" class="text-center" style="vertical-align: middle">
+                <span>aaa</span>
+              </td>
+              <td>
+              </td>
+              <td>
+                <span>0.4</span>
+              </td>
+              <td>
+                <span>0.5</span>
+              </td>
+              <td>
+                <span>0.6</span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span>acident</span>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span>acident</span>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span>acident</span>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="4" class="text-center" style="vertical-align: middle">
+                <span>aaa</span>
+              </td>
+              <td>
+              </td>
+              <td>
+                <span>0.4</span>
+              </td>
+              <td>
+                <span>0.5</span>
+              </td>
+              <td>
+                <span>0.6</span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span>acident</span>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span>acident</span>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span>acident</span>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="4" class="text-center" style="vertical-align: middle">
+                <span>aaa</span>
+              </td>
+              <td>
+              </td>
+              <td>
+                <span>0.4</span>
+              </td>
+              <td>
+                <span>0.5</span>
+              </td>
+              <td>
+                <span>0.6</span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span>acident</span>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span>acident</span>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span>acident</span>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="fp-state">
+                  <span>耗时:</span>
+                  <span class="fp-time">0(ms)</span>
+                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
+                </div>
+                <div class="fp-progress" style="display: none;">
+                  <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+      </div>
+
+      <hr/>
+    </div>
+
+  </div>
+</div>
+
+<script src="app/js/main.js"></script>

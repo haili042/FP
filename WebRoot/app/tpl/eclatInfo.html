@@ -1,0 +1,46 @@
+<header>
+  <div class="container">
+    <h1>eclat算法介绍</h1>
+  </div>
+</header>
+
+
+<!--第1栏-->
+<div class="col-md-4">
+  <div class="panel panel-default leftCol">
+    <div class="panel-heading">
+      算法简介
+    </div>
+
+    <div class="panel-body">
+	  <p>
+		Eclat算法加入了倒排的思想，加快频繁集生成速度，其算法思想是 由频繁k项集求交集，生成候选k+1项集 。对候选k+1项集做裁剪，生成频繁k+1项集，再求交集生成候选k+2项集。如此迭代，直到项集归一。趟扫描数据库D，计算中各个项集的支持度，将中不满足支持度的项集去掉形成。
+	  </p>
+    </div>
+  </div>
+</div>
+
+<!--第2栏-->
+<div class="col-md-8">
+  <div class="panel panel-default midCol">
+    <div class="panel-heading">
+      算法步骤
+    </div>
+
+    <div class="panel-body">
+
+      <!--第1行-->
+      <div class="row">
+        <div class="col-xs-12">
+          <pre class="text-info">
+算法过程：
+1.一次扫描数据库，获得初始数据。包括频繁1项集，数据库包含的所有items，事务总数（行）transNum，最小支持度minsup=limitValue*trans。
+2.二次扫描数据库，获得频繁2项集。
+3.按照Eclat算法，对频繁2项集迭代求交集，做裁剪，直到项集归一。  
+          </pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -5,7 +5,7 @@
     /*------------------------------------------
                     生成图表
      ------------------------------------------*/
-    var basePath = window.location.href, 
+    var basePath = window.location.origin + window.location.pathname, 
 		algorithm = 'apriori',
 		algorithmLib = {
 			apriori: 0,
@@ -22,7 +22,7 @@
 		cbArr = [] // 回调函数队列
 	;
     
-    var colors = Highcharts.getOptions().colors,
+    var colors/* = Highcharts.getOptions().colors,
     	chartData = {
 	    	'apriori': [{
 	            name: 'apriori',
@@ -177,7 +177,7 @@
         })
         .highcharts(); // return chart
 
-    
+    */
     /*------------------------------------------
                     获取数据
      ------------------------------------------*/

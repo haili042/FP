@@ -41,15 +41,15 @@ header {
 /*------------------------------------------
                   内容区
  ------------------------------------------*/
-#sidebar .panel-heading {
+.leftCol .panel-heading {
   background: #888;
 }
 
-#midCol .panel-heading {
+.midCol .panel-heading {
   background: #555;
 }
 
-#content .panel-heading {
+.rightCol .panel-heading {
   background: #222;
 }
 
