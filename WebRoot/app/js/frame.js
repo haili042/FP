@@ -70,22 +70,25 @@ var ChartDatas = (function (Router) {
         结果数据
      ------------------------------------------*/
     var data = {
-        apriori: {
-            dataSets: [ 'accidents', 'mushroom', 'T10I4D100K' ],
-            minSups: [],
-            data: {}
-        },
-        fpgrowth: {
-            dataSets: [ 'accidents', 'mushroom', 'T10I4D100K' ],
-            minSups: [],
-            data: {}
-        },
-        eclat: {
-            dataSets: [ 'accidents', 'mushroom', 'T10I4D100K' ],
-            minSups: [],
-            data: {}
-        }
-    };
+	        apriori: {
+	            dataSets: [],
+	            minSups: [],
+	            data: {}
+	        },
+	        fpgrowth: {
+	            dataSets: [],
+	            minSups: [],
+	            data: {}
+	        },
+	        eclat: {
+	            dataSets: [],
+	            minSups: [],
+	            data: {}
+	        }
+	    },
+	    minSups = [],
+	    dataSets = []
+    ;
 
     // 获取数据
     var getData = function () {
@@ -96,21 +99,39 @@ var ChartDatas = (function (Router) {
     var setData = function (algorithm, dataSet, minSup, time) {
     	data[algorithm].data[dataSet][minSup] = time;
     };
-
+    
+    // 获取支持度
+    var getMinSups = function () {
+    	return minSups;
+    };
+    
     // 增加支持度
-    var addMinSups = function (sup) {
+    var addMinSup = function (sup) {
+    	minSups.push(sup);
         for (var k in data) {
             if (data.hasOwnProperty(k)) {
                 data[k].minSups.push(sup);
+                
+                var dataSets = data[k].dataSets;
+                for (var sk in dataSets) {
+                	data[k].data[dataSets[sk]][sup] = 0; // 要先执行addDataSets
+                }
             }
         }
     };
     
+    // 获取数据集
+    var getDataSets = function () {
+    	return dataSets;
+    };
+    
     // 增加数据集
-    var addDataSets = function (dataset) {
+    var addDataSet = function (dataset) {
+    	dataSets.push(dataset);
     	for (var k in data) {
     		if (data.hasOwnProperty(k)) {
     			data[k].dataSets.push(dataset);
+    			data[k].data[dataset] = {};
     		}
     	}
     };
@@ -147,7 +168,17 @@ var ChartDatas = (function (Router) {
         return data[algorithm].minSups;
     };
 
-
+    // 初始化
+    [ 'accidents', 'mushroom', 'T10I4D100K' ].forEach(function(val, k) {
+    	addDataSet(val);
+    });
+    
+    // 初始化
+    [ 0.4, 0.5, 0.6 ].forEach(function(val, k) {
+    	addMinSup(val);
+    });
+    
+    
     /*------------------------------------------
      配置路由
      ------------------------------------------*/
@@ -190,8 +221,10 @@ var ChartDatas = (function (Router) {
     return {
         getData: getData,
         setData: setData,
-        addDataSets: addDataSets,
-        addMinSups: addMinSups,
+        getDataSets: getDataSets,
+        addDataSet: addDataSet,
+        getMinSups: getMinSups,
+        addMinSup: addMinSup,
         getSeries: getSeries,
         getCatagories: getCatagories
     };
