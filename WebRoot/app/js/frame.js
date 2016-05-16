@@ -174,7 +174,7 @@ var ChartDatas = (function (Router) {
     });
     
     // 初始化
-    [ 0.4, 0.5, 0.6 ].forEach(function(val, k) {
+    [ 0.5 ].forEach(function(val, k) {
     	addMinSup(val);
     });
     

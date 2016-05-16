@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 public class Download extends HttpServlet {
 	private static final long serialVersionUID = 1859766838217803284L;
 
-	private static String path = "/result";
+	private static String path = "result";
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {

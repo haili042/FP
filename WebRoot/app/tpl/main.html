@@ -18,13 +18,36 @@
       <div class="row">
         <div class="col-xs-12">
 
-          <div class="form-group">
-            <select class="form-control" id="datasets">
-              <option value="accidents">accidents 数据集</option>
-              <option value="mushroom">mushroom 数据集</option>
-              <option value="T10I4D100K">T10I4D100K 数据集</option>
-            </select>
-          </div>
+         <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>
+                <h5>数据集</h5>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+
+              <tr>
+                <td>
+                  <h5>accidents 数据集</h5>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <h5>mushroom 数据集</h5>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <h5>T10I4D100K 数据集</h5>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
 
         </div>
       </div>
@@ -39,40 +62,22 @@
               <th>
                 <h5>支持度</h5>
               </th>
-              <th>
-                <h5 class="pull-right">状态</h5>
-              </th>
             </tr>
             </thead>
-            <tbody id="minSupWraper">
-
-            <script id="minSup" type="template">
+            <tbody id="minSupWraper"></tbody>
+			<script id="minSup" type="template">
               <tr minsup="{{minSup}}">
                 <td>
                   <h5>{{minSup}}</h5>
                 </td>
-                <td>
-                  <div class="fp-state pull-right">
-                    <span>耗时:</span>
-                    <span class="fp-time">0(ms)</span>
-                    <button class="btn btn-default fp-res-download" minsup="{{minSup}}">下载</button>
-                  </div>
-                  <div class="fp-progress" style="display: none;">
-                    <div class="progress progress-striped active" style="margin-bottom: 0;margin: 6px 0;">
-                      <div class="progress-bar progress-bar-success" style="width: 100%;">
-                      </div>
-                    </div>
-                  </div>
-                </td>
               </tr>
             </script>
-            </tbody>
 
             <tfoot>
             <tr>
               <td colspan="2">
                 <input type="text" class="form-control pull-left"
-                       style="width: 70%;" id="addMinSupInp" placeholder="输入范围0.25~0.8">
+                       style="width: 70%;" id="addMinSupInp" placeholder="输入范围0.4~0.8">
                 <button class="btn btn-default pull-right" style="border-radius: 50%;" id="addMinSupBtn">
                   <i class="fa fa-plus"></i>
                 </button>
@@ -103,7 +108,7 @@
 <div class="col-md-9">
   <div class="panel panel-default rightCol">
     <div class="panel-heading">
-      结果分析
+      运行结果
     </div>
 
     <div class="panel-body">
@@ -127,7 +132,7 @@
             </tr>
             </thead>
 
-            <tbody id="tableTplWrap">
+            <tbody id="tableTplWrap"></tbody>
             <script type="text/html" id="tableTpl">
 			{{#each data}}
             <tr>
@@ -149,18 +154,19 @@
                 <span>{{key}}</span>
               </td>
 			  {{#each val}}
-              <td>
-                <div class="fp-state">
-                  <span>耗时:{{key}}:{{val}}</span>
-                  <span class="fp-time">0(ms)</span>
-                  <button class="btn btn-default fp-res-download" style="padding: 0 6px;">下载</button>
-                </div>
-                <div class="fp-progress" style="display: none;">
-                  <div class="progress progress-striped active" style="margin-bottom: 0;">
-                    <div class="progress-bar progress-bar-success" style="width: 100%;">
+              <td class="{{../../alogrithm}}-{{../key}}" minsup="{{key}}">
+                  <div class="fp-state p0 fp-hide">
+                    <div class="progress progress-striped active m0">
+                      <div class="progress-bar progress-bar-success" style="width: 100%;">
+                      </div>
                     </div>
                   </div>
-                </div>
+				  <div class="fp-state">
+                    <span>耗时:</span>
+                    <span class="fp-time">{{val}}(ms)</span>
+                    <button class="btn btn-default fp-res-download plr-md" algorithm="{{../../alogrithm}}"
+						dataset="{{../key}}" minsup="{{key}}">下载</button>
+                  </div>
               </td>
 			  {{/each}}
             </tr>
@@ -168,7 +174,6 @@
 			{{/each}}
 
             </script>
-            </tbody>
 
           </table>
 
