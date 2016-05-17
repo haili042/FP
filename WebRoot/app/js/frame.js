@@ -204,9 +204,21 @@ var ChartDatas = (function (Router) {
 	            data: {}
 	        }
 	    },
+	    algorithms = [ 'apriori', 'fpgrowth', 'eclat' ],
 	    minSups = [],
-	    dataSets = []
+	    dataSets = [],
+	    timer = 0 // 任务调度用到
     ;
+    
+    // 获取数据
+    var getTimer = function () {
+    	return timer;
+    };
+    
+    // 设置数据
+    var setTimer = function (t) {
+    	timer = t;
+    };
 
     // 获取数据
     var getData = function () {
@@ -232,7 +244,7 @@ var ChartDatas = (function (Router) {
                 
                 var dataSets = data[k].dataSets;
                 for (var sk in dataSets) {
-                	data[k].data[dataSets[sk]][sup] = 0; // 要先执行addDataSets
+                	data[k].data[dataSets[sk]][sup] = -1; // 要先执行addDataSets
                 }
             }
         }
@@ -267,7 +279,8 @@ var ChartDatas = (function (Router) {
                 var arr = [];
                 for (var sk in minSups) {
                     if (minSups.hasOwnProperty(sk)) {
-                        arr.push(agrmData[dataSets[k]][minSups[sk]]);
+                    	var v = agrmData[dataSets[k]][minSups[sk]] == -1 ? 0 : agrmData[dataSets[k]][minSups[sk]];
+                        arr.push(v);
                     }
                 }
                 var o = {
@@ -283,32 +296,21 @@ var ChartDatas = (function (Router) {
     
     // 总表数据
     var getSeriesAll = function (minSup) {
-    	var result = []
-	    	;
+    	var result = [];
     	
-    	for (var k in data) {
-    		if (data.hasOwnProperty(k)) {
-    			var dat = data[k].data;
-    			
-    			for (var sk in dat) {
-    				if (dat.hasOwnProperty(sk)) {
-    					var arr = [];
-    					
-    					for (var ssk in dat[sk]) {
-    	    				if (dat[sk].hasOwnProperty(ssk)) {
-    	    					
-    	    					arr.push((dat[sk][ssk][minSup] || 0));
-    	    				}
-    					}
-    	    				
-	    				var o = {
-    						name: sk,
-    						data: arr
-    	    			};
-    	    			result.push(o);
-    				}
-    			}
-    		}
+    	for (var j = 0, len2 = dataSets.length; j < len2; j++) {
+			var ds = dataSets[j], arr = [];
+			
+            for (var i = 0, len = algorithms.length; i < len; i++) {
+            	var agrm = algorithms[i],
+            		val = data[agrm].data[ds][minSup] == -1 ? 0 : data[agrm].data[ds][minSup];
+            	arr.push(val);
+            }
+            var o = {
+                name: ds,
+                data: arr
+            };
+            result.push(o);
     	}
     	
     	return result;
@@ -376,6 +378,8 @@ var ChartDatas = (function (Router) {
         addDataSet: addDataSet,
         getMinSups: getMinSups,
         addMinSup: addMinSup,
+        getTimer: getTimer,
+        setTimer: setTimer,
         getSeries: getSeries,
         getSeriesAll: getSeriesAll,
         getCatagories: getCatagories

@@ -15,57 +15,70 @@
     /*------------------------------------------
                     总表
      ------------------------------------------*/
-    var chart = $('#lineChart').highcharts({
-            chart: {
-                type: 'bar'
-            },
+    // 都一样的配置
+    var compareCfg = {
+        chart: {
+            type: 'bar'
+        },
+        credits: {
+            enabled: false  // 隐藏公司名称
+        },
+        xAxis: {
+        	categories: [ 'apriori', 'fpgrowth', 'eclat' ]
+        },
+        yAxis: {
+        	min: 0,
             title: {
-                text: '3种算法在最小支持度为0.4下的比较'
+                text: 'time (ms)'
             },
-            credits: {
-                enabled: false  // 隐藏公司名称
-            },
-            xAxis: {
-            	categories: [ 'apriori', 'fpgrowth', 'eclat' ]
-            },
-            yAxis: {
-            	min: 0,
-                title: {
-                    text: 'time (ms)'
-                },
-	            labels: {
-	                overflow: 'justify'
-	            }
-            },
-            plotOptions: {
-            	series: {
-                    dataLabels: {
-                        enabled: true
-                    }
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        plotOptions: {
+        	series: {
+                dataLabels: {
+                    enabled: true
                 }
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'top',
-                x: -40,
-                y: 150,
-                floating: true,
-                borderWidth: 1,
-                backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-                shadow: true
-            },
-            tooltip: {
-                formatter: function() {
-                    var point = this.point,
-                        s = point.name + '算法, ' + point.drilldown + '数据集 : <b>共耗时'+ this.y +'ms</b><br/>';
-                    return s;
-                }
-            },
-            // 正常图表
-            series: ChartDatas.getSeriesAll(0.5)
-        })
-        .highcharts(); // return chart
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 150,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        },
+        tooltip: {
+            formatter: function() {
+                var point = this.point,
+                    s = point.category + '算法, ' + point.series.name+ '数据集 : <b>共耗时'+ this.y +'ms</b><br/>';
+                return s;
+            }
+        }
+    };
+    
+    var chartCfg1 = $.extend({}, compareCfg, {
+    	title: {
+    		text: '3种算法在最小支持度为0.5下的比较'
+    	},
+    	series: ChartDatas.getSeriesAll(0.5)
+    });
+    
+    var chart1 = $('#lineChart1').highcharts(chartCfg1).highcharts();
+    
+    
+    var chartCfg2 = $.extend({}, compareCfg, {
+    	title: {
+    		text: '3种算法在最小支持度为0.45下的比较'
+    	},
+    	series: ChartDatas.getSeriesAll(0.45)
+    });
+    var chart2 = $('#lineChart2').highcharts(chartCfg2).highcharts();
     
     
     // 都一样的配置

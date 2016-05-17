@@ -24,28 +24,22 @@
               <th>
                 <h5>数据集</h5>
               </th>
+              <th>
+              	<h5>操作</h5>
+              </th>
             </tr>
             </thead>
-            <tbody>
-
+            <tbody id="dataSetWrapper"></tbody>
+			<script type="text/html" id="dataSetTpl">
               <tr>
                 <td>
-                  <h5>T10I4D100K 数据集</h5>
+                  <h5>{{dataset}} 数据集</h5>
                 </td>
-              </tr>
-
-              <tr>
                 <td>
-                  <h5>mushroom 数据集</h5>
+                  <button class="btn btn-default fp-res-download" dataset="{{dataset}}">下载</button>
                 </td>
               </tr>
-
-              <tr>
-                <td>
-                  <h5>accidents 数据集</h5>
-                </td>
-              </tr>
-            </tbody>
+            </script>
 
           </table>
 
@@ -64,8 +58,8 @@
               </th>
             </tr>
             </thead>
-            <tbody id="minSupWraper"></tbody>
-			<script id="minSup" type="template">
+            <tbody id="minSupWrapper"></tbody>
+			<script id="minSupTpl" type="text/html">
               <tr minsup="{{minSup}}">
                 <td>
                   <h5>{{minSup}}</h5>
@@ -78,8 +72,9 @@
               <td colspan="2">
                 <input type="text" class="form-control pull-left"
                        style="width: 70%;" id="addMinSupInp" placeholder="输入范围0.4~0.8">
-                <button class="btn btn-default pull-right" style="border-radius: 50%;" id="addMinSupBtn">
-                  <i class="fa fa-plus"></i>
+                <button class="btn btn-default pull-right"  id="addMinSupBtn">
+<!--                   <i class="fa fa-plus"></i> -->
+增加
                 </button>
               </td>
             </tr>
@@ -154,14 +149,19 @@
                 <span>{{key}}</span>
               </td>
 			  {{#each val}}
-              <td class="{{../../alogrithm}}-{{../key}}" minsup="{{key}}">
-                  <div class="fp-state p0 fp-hide">
+              <td class="fp-state {{../../alogrithm}}-{{../key}}" minsup="{{key}}" state="{{val}}">
+                  <div class="fp-unstart p0">
+                    <span class="m0">
+					  未开始
+                    </span>
+                  </div>
+                  <div class="fp-running p0 fp-hide">
                     <div class="progress progress-striped active m0">
                       <div class="progress-bar progress-bar-success" style="width: 100%;">
                       </div>
                     </div>
                   </div>
-				  <div class="fp-state">
+				  <div class="fp-finish fp-hide">
                     <span>耗时:</span>
                     <span class="fp-time">{{val}}(ms)</span>
                     <button class="btn btn-default fp-res-download plr-md" algorithm="{{../../alogrithm}}"

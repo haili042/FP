@@ -4,7 +4,8 @@
      	生成图表
      ------------------------------------------*/
     var basePath = window.location.origin + window.location.pathname,
-        minSups = ChartDatas.getMinSups();
+        minSups = ChartDatas.getMinSups(),
+	    dataSets = ChartDatas.getDataSets()
     ;
 
     /*------------------------------------------
@@ -31,14 +32,38 @@
      ------------------------------------------*/
 
     function addMinSup(data) {
-        var html = $('#minSup').text().replace(/{{minSup}}/g, data),
+        var html = $('#minSupTpl').text().replace(/{{minSup}}/g, data),
             elem = $(html)
             ;
-        $('#minSupWraper').append(elem);
+        $('#minSupWrapper').append(elem);
     }
 
     minSups.forEach(function (val, k) {
         addMinSup(val);
+    });
+    
+    /*------------------------------------------
+	 	设置数据集
+	 ------------------------------------------*/
+    function addDataSet(data) {
+    	var html = $('#dataSetTpl').text().replace(/{{dataset}}/g, data),
+	    	elem = $(html)
+	    	;
+    	$('#dataSetWrapper').append(elem);
+    	
+    	elem.find('.fp-res-download').click(function(e) {
+	        var dataset = $(this).attr('dataset'),
+	            url = basePath = 'download',
+	            params = {
+	                'fileName': dataset,
+	            };
+
+	        window.open(Tool.addUrlParams(url, params));
+    	});
+    }
+    
+    dataSets.forEach(function (val, k) {
+    	addDataSet(val);
     });
 
 
@@ -117,8 +142,27 @@
 
             window.open(Tool.addUrlParams(url, params));
         });
+        
+        // 运行状态
+        $('#tableTplWrap').find('.fp-state').each(function(k, elem) {
+        	var state = $(elem).attr('state')
+        		tdElem = $(this);
+        	if (state == '-1') {
+        		tdElem.find('.fp-unstart').show();
+        		tdElem.find('.fp-running').hide();
+        		tdElem.find('.fp-finish').hide();
+        	} else if (state == '0') {
+        		tdElem.find('.fp-unstart').hide();
+        		tdElem.find('.fp-running').show();
+        		tdElem.find('.fp-finish').hide();
+        	} else {
+        		tdElem.find('.fp-unstart').hide();
+        		tdElem.find('.fp-running').hide();
+        		tdElem.find('.fp-finish').show();
+        	}
+        });
+        
     }
-
     repaintTable();
 
 
@@ -132,8 +176,6 @@
             cbArr = [], // 回调函数队列
             chartDatas = ChartDatas.getData();
 
-        $('.fp-state').toggle();
-
         // 封装回调函数队列
         for (var algorithm in chartDatas) {
 
@@ -146,29 +188,37 @@
                 for (var i = 0, len = dataSets.length; i < len; i++) {
 
                     for (var j = 0, len2 = minSups.length; j < len2; j++) {
+                    	
+                    	var tdElem = $('#tableTplWrap')
+                 			.find('.' + algorithm + '-' + dataSets[i] + '[minsup="'+minSups[j]+'"]');
 
+                    	ChartDatas.setData(algorithm, dataSets[i], minSups[j], 0);
+                    	
+                    	tdElem.find('.fp-unstart').hide();
+                    	tdElem.find('.fp-running').show();
+                    	
                         // 回调队列
-                        cbArr.push({
+                		cbArr.push({
                             algorithm: algorithm,
                             dataSet: dataSets[i],
                             minSup: minSups[j],
                             cb: function (res) {
                                 var time = res.time,
-                                    dataSet = res.dataSet,
-                                    algorithm = res.algorithm,
-                                    minSup = res.minSup,
-                                    tdElem = $('#tableTplWrap')
-                                    		.find('.' + algorithm + '-' + dataSet + '[minsup="'+minSup+'"]');
-
-                                totalTime += time;
-
+	                                dataSet = res.dataSet,
+	                                algorithm = res.algorithm,
+	                                minSup = res.minSup,
+	                                tdElem = $('#tableTplWrap')
+	                     				.find('.' + algorithm + '-' + dataSet + '[minsup="'+minSup+'"]');
+                                
                                 ChartDatas.setData(algorithm, dataSet, minSup, time);
-
                                 tdElem.find('.fp-time').text(time);
-                                tdElem.find('.fp-state').toggle(); // 隐藏和显示
+                                tdElem.find('.fp-unstart').hide(); // 隐藏和显示
+                                tdElem.find('.fp-running').hide(); // 隐藏和显示
+                                tdElem.find('.fp-finish').show(); // 隐藏和显示
 
                             }
                         });
+                    	
                     }
                 }
             }
@@ -184,7 +234,7 @@
             		promise = promise.then(function(res) {
             			return getData(val.algorithm, val.dataSet, val.minSup).then(val.cb);
             		});
-        		}, 2000);
+        		}, 2000); // 延迟2ms
         	})(val);
     	});
 

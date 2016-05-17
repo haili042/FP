@@ -19,7 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 public class Download extends HttpServlet {
 	private static final long serialVersionUID = 1859766838217803284L;
 
-	private static String path = "result";
+	private static String resPath = "result";
+	private static String srcPath = "dataset";
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
@@ -28,8 +29,16 @@ public class Download extends HttpServlet {
 			String realPath = req.getServletContext().getRealPath("/");
 			String algorithm = req.getParameter("algorithm");
 			String minSup = req.getParameter("minSup");
-			String fileName = req.getParameter("fileName") + "_" + minSup + ".dat";
-			String filePath = realPath + path + "\\" + algorithm + "\\" + fileName;
+			String fileName = "";
+			String filePath = "";
+			
+			if (algorithm != null && !"".equals(algorithm)) {
+				fileName = req.getParameter("fileName") + "_" + minSup + ".dat";
+				filePath = realPath + resPath + "\\" + algorithm + "\\" + fileName;
+			} else {
+				fileName = req.getParameter("fileName") + ".dat";
+				filePath = realPath + srcPath + "\\" + fileName;
+			}
 			
 			res.setContentType("text/plain");
 			res.setHeader("Location", fileName);
