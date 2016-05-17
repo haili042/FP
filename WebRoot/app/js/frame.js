@@ -65,9 +65,127 @@ var ChartDatas = (function (Router) {
             }
         }
     };
+    var data = [{
+		algorithm: 'apriori',
+		val: [{
+			dataSet: 'T10I4D100K',
+			val: [{
+				minSup: 0.3,
+				val: 123
+			}, {
+				minSup: 0.4,
+				val: 653
+			}, {
+				minSup: 0.5,
+				val: 526
+			}]
+		}, {
+			dataSet: 'mushroom',
+			val: [{
+				minSup: 0.3,
+				val: 123
+			}, {
+				minSup: 0.4,
+				val: 653
+			}, {
+				minSup: 0.5,
+				val: 526
+			}]
+		}, {
+			dataSet: 'accidents',
+			val: [{
+				minSup: 0.3,
+				val: 123
+			}, {
+				minSup: 0.4,
+				val: 653
+			}, {
+				minSup: 0.5,
+				val: 526
+			}]
+		}]
+	}, {
+		algorithm: 'apriori',
+		val: [{
+			dataSet: 'T10I4D100K',
+			val: [{
+				minSup: 0.3,
+				val: 123
+			}, {
+				minSup: 0.4,
+				val: 653
+			}, {
+				minSup: 0.5,
+				val: 526
+			}]
+		}, {
+			dataSet: 'mushroom',
+			val: [{
+				minSup: 0.3,
+				val: 123
+			}, {
+				minSup: 0.4,
+				val: 653
+			}, {
+				minSup: 0.5,
+				val: 526
+			}]
+		}, {
+			dataSet: 'accidents',
+			val: [{
+				minSup: 0.3,
+				val: 123
+			}, {
+				minSup: 0.4,
+				val: 653
+			}, {
+				minSup: 0.5,
+				val: 526
+			}]
+		}]
+	}, {
+		algorithm: 'apriori',
+		val: [{
+			dataSet: 'T10I4D100K',
+			val: [{
+				minSup: 0.3,
+				val: 123
+			}, {
+				minSup: 0.4,
+				val: 653
+			}, {
+				minSup: 0.5,
+				val: 526
+			}]
+		}, {
+			dataSet: 'mushroom',
+			val: [{
+				minSup: 0.3,
+				val: 123
+			}, {
+				minSup: 0.4,
+				val: 653
+			}, {
+				minSup: 0.5,
+				val: 526
+			}]
+		}, {
+			dataSet: 'accidents',
+			val: [{
+				minSup: 0.3,
+				val: 123
+			}, {
+				minSup: 0.4,
+				val: 653
+			}, {
+				minSup: 0.5,
+				val: 526
+			}]
+		}]
+	}];
 */
     /*------------------------------------------
-        结果数据
+        	结果数据
      ------------------------------------------*/
     var data = {
 	        apriori: {
@@ -163,24 +281,57 @@ var ChartDatas = (function (Router) {
         return result;
     };
     
+    // 总表数据
+    var getSeriesAll = function (minSup) {
+    	var result = []
+	    	;
+    	
+    	for (var k in data) {
+    		if (data.hasOwnProperty(k)) {
+    			var dat = data[k].data;
+    			
+    			for (var sk in dat) {
+    				if (dat.hasOwnProperty(sk)) {
+    					var arr = [];
+    					
+    					for (var ssk in dat[sk]) {
+    	    				if (dat[sk].hasOwnProperty(ssk)) {
+    	    					
+    	    					arr.push((dat[sk][ssk][minSup] || 0));
+    	    				}
+    					}
+    	    				
+	    				var o = {
+    						name: sk,
+    						data: arr
+    	    			};
+    	    			result.push(o);
+    				}
+    			}
+    		}
+    	}
+    	
+    	return result;
+    };
+    
     // 生成highchart 需要的格式
     var getCatagories = function (algorithm) {
         return data[algorithm].minSups;
     };
 
     // 初始化
-    [ 'accidents', 'mushroom', 'T10I4D100K' ].forEach(function(val, k) {
+    [ 'T10I4D100K', 'mushroom', 'accidents' ].forEach(function(val, k) {
     	addDataSet(val);
     });
     
     // 初始化
-    [ 0.5 ].forEach(function(val, k) {
+    [ 0.4, 0.45, 0.5 ].forEach(function(val, k) {
     	addMinSup(val);
     });
     
     
     /*------------------------------------------
-     配置路由
+     	配置路由
      ------------------------------------------*/
     Router.config({
         '#/aprioriInfo': {
@@ -226,6 +377,7 @@ var ChartDatas = (function (Router) {
         getMinSups: getMinSups,
         addMinSup: addMinSup,
         getSeries: getSeries,
+        getSeriesAll: getSeriesAll,
         getCatagories: getCatagories
     };
 

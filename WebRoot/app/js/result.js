@@ -4,122 +4,29 @@
     /*------------------------------------------
                     生成图表
      ------------------------------------------*/
-    var basePath = window.location.origin + window.location.pathname, 
-		algorithm = 'apriori',
-		algorithmLib = {
-			apriori: 0,
-			fpgrowth: 1,
-			eclat: 2
-		},
-		datasets = 'accidents',
-		datasetsLib = {
-			accidents: 0,
-			mushroom: 1,
-			T10I4D100K: 2
-		},
-		minSups = [],
-		cbArr = [] // 回调函数队列
+    var basePath = window.location.origin + window.location.pathname
 	;
     
-    var colors = Highcharts.getOptions().colors,
-    	chartData = {
-	    	'apriori': [{
-	            name: 'apriori',
-	            y: 0,
-	            drilldown: 'accidents'
-	        }, {
-	            name: 'fpgrowth',
-	            y: 0,
-	            drilldown: 'mushroom'
-	        }, {
-	            name: 'eclat',
-	            y: 0,
-	            drilldown: 'T10I4D100K'
-	        }],
-			'fpgrowth': [{
-	            name: 'apriori',
-	            y: 0,
-	            drilldown: 'accidents'
-	        }, {
-	            name: 'fpgrowth',
-	            y: 0,
-	            drilldown: 'mushroom'
-	        }, {
-	            name: 'eclat',
-	            y: 0,
-	            drilldown: 'T10I4D100K'
-	        }],
-			'eclat': [{
-	            name: 'apriori',
-	            y: 0,
-	            drilldown: 'accidents'
-	        }, {
-	            name: 'fpgrowth',
-	            y: 0,
-	            drilldown: 'mushroom'
-	        }, {
-	            name: 'eclat',
-	            y: 0,
-	            drilldown: 'T10I4D100K'
-	        }]
-    	},
-    	subChartData = {
-	    	'apriori': [{
-                name: 'accidents',
-                data: []
-            }, {
-                name: 'mushroom',
-                data: []
-            }, {
-                name: 'T10I4D100K',
-                data: []
-            }],
-			'fpgrowth': [{
-                name: 'accidents',
-                data: []
-            }, {
-                name: 'mushroom',
-                data: []
-            }, {
-                name: 'T10I4D100K',
-                data: []
-            }],
-			'eclat': [{
-                name: 'accidents',
-                data: []
-            }, {
-                name: 'mushroom',
-                data: []
-            }, {
-                name: 'T10I4D100K',
-                data: []
-            }]
-    	}
+    var aprioriData = ChartDatas.getSeries('apriori'),
+    	fpgrowthData = ChartDatas.getSeries('fpgrowth'),
+    	eclatData = ChartDatas.getSeries('eclat')
     ;
-    
 
     /*------------------------------------------
                     总表
      ------------------------------------------*/
     var chart = $('#lineChart').highcharts({
             chart: {
-                type: 'bar',
-                events: {
-                	drilldown: function (e) {
-                        var chart = this;
-                        series = subChartData[e.point.name][datasetsLib[e.point.series.name]];
-                        chart.addSeriesAsDrilldown(e.point, series);
-                	}
-                }
+                type: 'bar'
             },
             title: {
-                text: 'Apriori'
+                text: '3种算法在最小支持度为0.4下的比较'
             },
             credits: {
                 enabled: false  // 隐藏公司名称
             },
             xAxis: {
-            	type: 'category'
+            	categories: [ 'apriori', 'fpgrowth', 'eclat' ]
             },
             yAxis: {
             	min: 0,
@@ -156,23 +63,7 @@
                 }
             },
             // 正常图表
-            series: [{
-            	name: 'accidents',
-            	data: chartData["apriori"],
-        		drilldown: 'accidents'
-            }, {
-            	name: 'mushroom',
-            	data: chartData["fpgrowth"],
-            	drilldown: 'mushroom'
-            }, {
-            	name: 'T10I4D100K',
-            	data: chartData["eclat"],
-        		drilldown: 'T10I4D100K'
-            }],
-            // 下钻图表
-            drilldown: {
-                series: []
-            }
+            series: ChartDatas.getSeriesAll(0.5)
         })
         .highcharts(); // return chart
     
@@ -221,7 +112,7 @@
     	title: {
     		text: 'Apirori 算法'
     	},
-    	series: ChartDatas.getSeries('apriori')
+    	series: aprioriData
     });
     var aprioriChart = $('#aprioriChart').highcharts(aprioriChartCfg);
 
@@ -236,7 +127,7 @@
     	title: {
     		text: 'Fp-growth 算法'
     	},
-    	series: ChartDatas.getSeries('fpgrowth')
+    	series: fpgrowthData
     });
     var fpgrowthChart = $('#fpgrowthChart').highcharts(fpgrowthChartCfg);
     
@@ -252,7 +143,7 @@
     	title: {
     		text: 'Eclat 算法'
     	},
-        series: ChartDatas.getSeries('eclat')
+        series: eclatData
     });
     var eclatChart = $('#eclatChart').highcharts(eclatChartCfg);
 

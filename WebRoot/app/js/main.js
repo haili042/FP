@@ -43,7 +43,7 @@
 
 
     /*------------------------------------------
-     生成表格
+     	生成表格
      ------------------------------------------*/
 
     // 重绘表格
@@ -153,7 +153,6 @@
                             dataSet: dataSets[i],
                             minSup: minSups[j],
                             cb: function (res) {
-                                console.log(res);
                                 var time = res.time,
                                     dataSet = res.dataSet,
                                     algorithm = res.algorithm,
@@ -207,72 +206,5 @@
         elem.val('');
     });
 
-    
-//    function prom(url) {
-//    	return $.ajax(url);
-//    }
-//    var cbArr = [{
-//    	url: basePath + 'app/css/1',
-//        cb: function(res) {
-//        	alert(1);
-//        }
-//    }, {
-//		url: basePath + 'app/css/2',
-//		cb: function(res) {
-//			alert(2);
-//		}
-//	}, {
-//		url: basePath + 'app/css/3',
-//		cb: function(res) {
-//			alert(3);
-//		}
-//	}, {
-//		url: basePath + 'app/css/4',
-//		cb: function(res) {
-//			alert(4);
-//		}
-//	}];
-//    
-//
-//    function pp (o) {
-//    	var dtd = $.Deferred();
-//    	$.ajax(o.url).then(function(res) {
-//    		o.cb();
-//    		dtd.resolve(res);
-//    	});
-//    	return dtd.promise();
-//    }
-    
-//    $.ajax("app/css/1").then(function() {alert(1);})
-//    .then(function(data) {
-//        return $.ajax("app/css/2").then(function() {alert(2);});
-//    }).then(function(data) {
-//        return $.ajax("app/css/3").then(function() {alert(3);});
-//    }).then(function(data) {
-//        return $.ajax("app/css/4").then(function() {alert(4);});
-//    });
-    
-//    var pppp = cbArr.shift();
-//    var ppr = $.ajax(pppp.url).then(pppp.cb);
-//    
-//    cbArr.forEach(function(val, k) {
-//    	(function(val) {
-//    		ppr = ppr.then(function(res) {
-//    			return $.ajax(val.url).then(val.cb);
-//    		});
-//    	})(val);
-//	});
-    
-    
-//	ppr = ppr.then(function(res) {
-//		var a = cbArr.shift();
-//		return $.ajax(a.url).then(a.cb);
-//	});
-//	
-//	ppr = ppr.then(function(res) {
-//		var a = cbArr.shift();
-//		return $.ajax(a.url).then(a.cb);
-//	});
-	
 
 })(Tool, Router, ChartDatas, Handlebars);

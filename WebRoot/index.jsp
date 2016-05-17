@@ -52,7 +52,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script src="app/lib/handlebars-1.0.0.beta.6.js"></script>
 <script src="app/lib/highcharts.js"></script>
 <script src="app/lib/exporting.js"></script>
-<script src="app/lib/drilldown.js"></script>
 
 <!--引入脚本-->
 <script src="app/js/tool.js"></script>
