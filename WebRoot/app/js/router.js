@@ -57,7 +57,7 @@ var Router = (function($, Tool) {
 			router.empty(); // 清空
 			router.append(view);
 			view.animate({
-				'opacity': '1',
+				'opacity': '1'
 			});
 		});
 	}
